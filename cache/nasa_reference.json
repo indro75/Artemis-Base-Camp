@@ -1,0 +1,514 @@
+{
+  "_provenance": {
+    "organization": "NASA Open Science & Planetary Data System",
+    "challenge": "Build a Junior Astronaut Mission Trainer (NASA Space Apps Challenge 2026)",
+    "license": "Apache-2.0",
+    "offline_ready": true,
+    "last_sync": "2026-11-11T00:00:00Z"
+  },
+  "glossary": {
+    "mSv": {
+      "term": "Millisievert (mSv)",
+      "simple": "A measurement of radiation absorbed by the human body.",
+      "detail": "On Earth, you receive about 3 mSv per year from natural rocks and sunlight. In deep space, cosmic rays and solar flares can deliver hundreds of mSv, so astronauts need thick shields!",
+      "citation": "NASA Space Radiation Program Element / NCRP Report No. 153",
+      "dataset_id": "NASA-STD-3001-VOL-1"
+    },
+    "Sol": {
+      "term": "Sol (Martian Day)",
+      "simple": "One day and night on planet Mars.",
+      "detail": "A Martian Sol lasts 24 hours, 39 minutes, and 35 seconds. That is just about 40 minutes longer than an Earth day!",
+      "citation": "NASA Jet Propulsion Laboratory (JPL) Mars Exploration",
+      "dataset_id": "NASA-PDS-M2020-MEDA"
+    },
+    "LunarDay": {
+      "term": "Lunar Day / Night Cycle",
+      "simple": "The Moon takes about 28 Earth days to spin once.",
+      "detail": "That means 14 straight Earth days of blistering sunlight, followed by 14 Earth days of freezing dark! At the South Pole rim, high crater peaks get sunlight almost 86% of the year.",
+      "citation": "NASA Lunar Reconnaissance Orbiter (LRO) LOLA Team",
+      "dataset_id": "NASA-PDS-LRO-LOLA-GDR"
+    },
+    "Regolith": {
+      "term": "Regolith (Moon & Mars Dirt)",
+      "simple": "The crushed rock, dust, and mineral soil covering the Moon and Mars.",
+      "detail": "Space dirt is very sharp and dusty, but piled into thick sandbags over a habitat dome, it makes an amazing natural shield against radiation and micrometeorites!",
+      "citation": "NASA Artemis Base Camp Surface Concepts",
+      "dataset_id": "NASA-NTRS-20210018593"
+    },
+    "Kilowatt": {
+      "term": "Kilowatt (kW)",
+      "simple": "A unit measuring how much electric power a base uses.",
+      "detail": "1 kilowatt is 1,000 watts — enough to run a microwave oven. A full Artemis base needs 20 to 40 kilowatts to heat rooms, make oxygen, and charge rovers.",
+      "citation": "NASA Kilopower Nuclear Reactor Project",
+      "dataset_id": "NASA-NTRS-20180007817"
+    },
+    "ECLSS": {
+      "term": "ECLSS (Life Support System)",
+      "simple": "The Environmental Control and Life Support System.",
+      "detail": "The machine that scrubs carbon dioxide from breathing air, produces fresh oxygen from water, and recycles 98% of crew moisture and sweat into crystal-clean drinking water!",
+      "citation": "NASA Marshall Space Flight Center ECLSS Development",
+      "dataset_id": "NASA-OSDR-ECLSS-TR-2023"
+    },
+    "CME": {
+      "term": "Coronal Mass Ejection (CME)",
+      "simple": "A giant cannon blast of magnetic solar gas shot out from the Sun.",
+      "detail": "When the Sun has a storm, it can fling billions of tons of super-heated plasma into space at millions of miles per hour. If it hits an outpost, radiation levels soar!",
+      "citation": "NASA Space Weather Database Of Notifications, Knowledge, and Information (DONKI)",
+      "dataset_id": "NASA-DONKI-CME-SPE-2024"
+    },
+    "SPE": {
+      "term": "Solar Particle Event (SPE)",
+      "simple": "A storm of fast, high-energy protons hurled by the Sun.",
+      "detail": "These tiny energetic particles travel at almost the speed of light. Without magnetic deflection or deep storm shelters, they can damage human DNA and computer chips.",
+      "citation": "NASA Heliophysics Division / DONKI Space Weather Service",
+      "dataset_id": "NASA-DONKI-SEP-FLR-2024"
+    },
+    "EVA": {
+      "term": "Spacewalk (EVA)",
+      "simple": "Extravehicular Activity: when an astronaut steps outside in a spacesuit.",
+      "detail": "Spacewalks are vital for repairs and collecting ice, but astronauts must carry their own oxygen tank and are exposed to space radiation outside the habitat walls.",
+      "citation": "NASA Johnson Space Center EVA Office",
+      "dataset_id": "NASA-NTRS-EVA-RECORDS-2022"
+    },
+    "MOXIE": {
+      "term": "MOXIE (Oxygen Generator)",
+      "simple": "Mars Oxygen In-Situ Resource Utilization Experiment.",
+      "detail": "A real gold box aboard NASA's Perseverance rover that takes thin Martian carbon dioxide gas (CO2) and cracks it into breathable oxygen (O2) like a mechanical tree!",
+      "citation": "NASA Perseverance Rover MOXIE Team / MIT Haystack Observatory",
+      "dataset_id": "NASA-PDS-M2020-MOXIE-CAL"
+    },
+    "Kilopower": {
+      "term": "Kilopower Surface Reactor",
+      "simple": "A safe, compact nuclear fission power source for space bases.",
+      "detail": "Unlike solar panels that stop when night falls or dust storms brew, Kilopower provides a steady, reliable 10 to 40 kilowatts 24/7 for over 10 years.",
+      "citation": "NASA Space Technology Mission Directorate (STMD)",
+      "dataset_id": "NASA-STMD-KRUSTY-2019"
+    }
+  },
+  "locations": {
+    "moon": {
+      "id": "moon",
+      "name": "Artemis Base Camp",
+      "body": "Moon (Earth's Natural Satellite)",
+      "site": "Shackleton Crater Rim, South Pole (89.9°S, 0.0°E)",
+      "tagline": "Peak of Eternal Light — Extreme temperatures, ancient polar water ice.",
+      "environment": {
+        "day_length_hours": 708.7,
+        "day_cycle_name": "Lunar Day (28 Earth Days)",
+        "gravity_g": 0.166,
+        "atmosphere_pressure_pa": 0.000000001,
+        "temp_day_c": 120,
+        "temp_night_c": -130,
+        "temp_shadow_c": -246,
+        "solar_baseline_flux_w_m2": 1361,
+        "solar_peak_rim_availability": 0.86,
+        "background_gcr_msv_day": 0.42,
+        "dust_abrasion_rate": 0.04
+      },
+      "initial_state": {
+        "sol_day": 1,
+        "battery_percent": 100,
+        "battery_capacity_kwh": 120,
+        "power_generation_kw": 35.0,
+        "power_consumption_kw": 24.5,
+        "oxygen_percent": 100,
+        "water_liters": 850,
+        "food_rations_days": 45,
+        "shield_integrity_percent": 100,
+        "crew_radiation_msv": 1.2,
+        "science_points": 0,
+        "crew_health_percent": 100,
+        "crew_count": 4,
+        "crew_names": ["Commander Maya Lin", "Engineer Tariq Khan", "Astrobiologist Elena Cruz", "Pilot Leo Chen"],
+        "modules": {
+          "solar_array": { "level": 1, "status": "nominal", "wear": 0, "name": "Deployable Solar Mast" },
+          "kilopower": { "level": 1, "status": "nominal", "wear": 0, "name": "10kW Surface Fission Generator" },
+          "eclss": { "level": 1, "status": "nominal", "wear": 0, "name": "Water Recovery & Sabatier Scrubbers" },
+          "shielding": { "level": 1, "status": "nominal", "wear": 0, "name": "Regolith Bunkers & Active EM Coils" },
+          "drill_lab": { "level": 1, "status": "nominal", "wear": 0, "name": "South Pole Cryo-Drill & Science Lab" },
+          "rover": { "level": 1, "status": "nominal", "wear": 0, "name": "VIPER-Class Volatiles Scout Rover" }
+        }
+      },
+      "data_citations": [
+        {
+          "system": "Lunar Elevation & Topography",
+          "instrument": "Lunar Orbiter Laser Altimeter (LOLA)",
+          "dataset_id": "NASA-PDS-LRO-LOLA-GDR",
+          "url": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm",
+          "fact": "Mapped Shackleton Crater rim elevation and identified Peaks of Eternal Light with 86% annual sunlight."
+        },
+        {
+          "system": "Thermal Mapping & Cold Traps",
+          "instrument": "Diviner Lunar Radiometer Experiment",
+          "dataset_id": "NASA-PDS-LRO-DIVINER-GDR",
+          "url": "https://diviner.ucla.edu",
+          "fact": "Recorded coldest temperatures in the solar system (-246°C / 27 Kelvin) inside permanently shadowed craters where water ice survives for billions of years."
+        },
+        {
+          "system": "Space Radiation Limits",
+          "instrument": "Cosmic Ray Telescope for the Effects of Radiation (CRaTER)",
+          "dataset_id": "NASA-LRO-CRATER-LEVEL2",
+          "url": "https://crater.unh.edu",
+          "fact": "Measured deep space Galactic Cosmic Rays (GCR) delivering 0.35 to 0.45 mSv/day at the lunar surface."
+        }
+      ]
+    },
+    "mars": {
+      "id": "mars",
+      "name": "Jezero Outpost Alpha",
+      "body": "Mars (The Red Planet)",
+      "site": "Jezero Crater Paleolake Delta (18.38°N, 77.58°E)",
+      "tagline": "Ancient Riverbed — Dynamic dust devils, CO2 atmosphere, frozen subsurface aquifers.",
+      "environment": {
+        "day_length_hours": 24.65,
+        "day_cycle_name": "Sol (24h 39m)",
+        "gravity_g": 0.38,
+        "atmosphere_pressure_pa": 610,
+        "temp_day_c": -10,
+        "temp_night_c": -95,
+        "temp_shadow_c": -125,
+        "solar_baseline_flux_w_m2": 590,
+        "solar_peak_rim_availability": 0.50,
+        "background_gcr_msv_day": 0.32,
+        "dust_abrasion_rate": 0.08
+      },
+      "initial_state": {
+        "sol_day": 1,
+        "battery_percent": 100,
+        "battery_capacity_kwh": 140,
+        "power_generation_kw": 32.0,
+        "power_consumption_kw": 22.0,
+        "oxygen_percent": 100,
+        "water_liters": 780,
+        "food_rations_days": 50,
+        "shield_integrity_percent": 100,
+        "crew_radiation_msv": 0.8,
+        "science_points": 0,
+        "crew_health_percent": 100,
+        "crew_count": 4,
+        "crew_names": ["Commander Sofia Ramos", "Engineer Samira Begum", "Geochemist David Park", "Systems Tech Lucas Mori"],
+        "modules": {
+          "solar_array": { "level": 1, "status": "nominal", "wear": 0, "name": "Triple-Junction Martian Solar Field" },
+          "kilopower": { "level": 1, "status": "nominal", "wear": 0, "name": "Kilopower Stirling Fission Cell" },
+          "eclss": { "level": 1, "status": "nominal", "wear": 0, "name": "MOXIE CO2 Extractor & Water Recovery" },
+          "shielding": { "level": 1, "status": "nominal", "wear": 0, "name": "Compacted Basalt Berm & EM Deflector" },
+          "drill_lab": { "level": 1, "status": "nominal", "wear": 0, "name": "SHERLOC Raman Astrobiology Lab" },
+          "rover": { "level": 1, "status": "nominal", "wear": 0, "name": "Perseverance-Class Sample Retrieval Rover" }
+        }
+      },
+      "data_citations": [
+        {
+          "system": "Atmospheric & Environmental Sensors",
+          "instrument": "Mars Environmental Dynamics Analyzer (MEDA)",
+          "dataset_id": "NASA-PDS-M2020-MEDA",
+          "url": "https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/PERSEVERANCE/meda.html",
+          "fact": "Provides daily records of Martian air temperature (-85°C to -10°C), atmospheric pressure (610 Pa), and optical dust thickness (tau)."
+        },
+        {
+          "system": "In-Situ Atmospheric Oxygen Synthesis",
+          "instrument": "Mars Oxygen ISRU Experiment (MOXIE)",
+          "dataset_id": "NASA-PDS-M2020-MOXIE-CAL",
+          "url": "https://mars.nasa.gov/mars2020/spacecraft/instruments/moxie/",
+          "fact": "Proven technology producing 6 to 12 grams of breathable oxygen per hour from the 95% CO2 Martian atmosphere."
+        },
+        {
+          "system": "Biological Radiation Standards",
+          "instrument": "Mars Science Laboratory Radiation Assessment Detector (RAD)",
+          "dataset_id": "NASA-PDS-MSL-RAD",
+          "url": "https://pds-geosciences.wustl.edu/missions/msl/rad.htm",
+          "fact": "Confirmed surface radiation dose rate of ~0.64 mSv/day during solar minimum, proving deep shelters are required for long stays."
+        }
+      ]
+    }
+  },
+  "osdr_biological_thresholds": {
+    "safe_threshold_msv": 20.0,
+    "caution_threshold_msv": 50.0,
+    "warning_threshold_msv": 100.0,
+    "critical_threshold_msv": 200.0,
+    "max_acceptable_mission_msv": 250.0,
+    "studies": [
+      {
+        "study_id": "NASA-OSDR-STUDY-87",
+        "title": "GeneLab: Cellular Stress & DNA Double-Strand Breaks Under High-LET Space Radiation",
+        "url": "https://osdr.nasa.gov/osdr/data/osd/files/87.1",
+        "clinical_note": "Identified repair pathways activated when astronauts receive >20 mSv, establishing the early caution zone."
+      },
+      {
+        "study_id": "NASA-OSDR-GLDS-48",
+        "title": "GeneLab: Musculoskeletal Degradation & Bone Mineral Density Loss in Partial Gravity",
+        "url": "https://osdr.nasa.gov/osdr/data/osd/files/48.1",
+        "clinical_note": "Documented 1.2% bone density loss per 30 days without daily 2-hour resistive exercise and balanced hydration."
+      },
+      {
+        "study_id": "NASA-STD-3001-VOL-1",
+        "title": "NASA Space Flight Human-System Standard: Radiation Health",
+        "url": "https://www.nasa.gov/hhp/nasa-space-flight-human-system-standard/",
+        "clinical_note": "Limits cumulative career exposure to keep risk of exposure-induced death (REID) below 3% at 95% confidence interval."
+      }
+    ]
+  },
+  "donki_weather_catalog": [
+    {
+      "id": "DONKI-SPE-2024-X4",
+      "type": "CME & SPE Event",
+      "intensity": "X4.5 Solar Flare + Fast Halo CME (1,450 km/s)",
+      "catalog_id": "DONKI-2024-05-10T17:44:00-CME-001",
+      "source_url": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/CME/24294/1",
+      "radiation_unshielded_spike_msv": 45.0,
+      "radiation_deflected_spike_msv": 4.5,
+      "sensor": "GOES-16 Solar Ultraviolet Imager & SOHO LASCO C3",
+      "description": "Massive coronal mass ejection directed toward the inner solar system. High-energy protons arriving within hours."
+    },
+    {
+      "id": "DONKI-SPE-2024-M8",
+      "type": "SPE Event",
+      "intensity": "M8.7 Solar Energetic Particle Storm",
+      "catalog_id": "DONKI-2024-05-08T01:41:00-SEP-001",
+      "source_url": "https://kauai.ccmc.gsfc.nasa.gov/DONKI/view/SEP/24278/1",
+      "radiation_unshielded_spike_msv": 22.0,
+      "radiation_deflected_spike_msv": 2.0,
+      "sensor": "STEREO-A Ahead Plastic Sensor & ACE EPAM",
+      "description": "Coronal shock front producing intense flux of protons >100 MeV. Moderate radiation spike expected."
+    },
+    {
+      "id": "DONKI-QUIET-GCR",
+      "type": "GCR Background",
+      "intensity": "Nominal Deep Galactic Cosmic Ray Stream",
+      "catalog_id": "DONKI-GCR-QUIET-BASELINE",
+      "source_url": "https://ccmc.gsfc.nasa.gov/modelweb/",
+      "radiation_unshielded_spike_msv": 0.4,
+      "radiation_deflected_spike_msv": 0.1,
+      "sensor": "LRO CRaTER / MSL RAD Baseline",
+      "description": "Steady background galactic cosmic rays originating outside our solar system."
+    }
+  ],
+  "tactical_events": [
+    {
+      "id": "event_solar_particle_storm",
+      "trigger_day": 3,
+      "title": "ALERT: X-Class Solar Particle Storm Inbound!",
+      "category": "Space Weather Alert (DONKI)",
+      "badge": "CRITICAL THREAT",
+      "donki_ref": "DONKI-SPE-2024-X4",
+      "science_note": "Real NASA DONKI records show an X4.5 coronal mass ejection can send billions of tons of high-energy protons directly across planetary surfaces.",
+      "dialogue": "Flight Director: 'Commander, satellites detect a massive solar flare! Fast proton shockwave arriving in 45 minutes. How do we configure the base?'",
+      "choices": [
+        {
+          "id": "storm_shelter",
+          "label": "Option A: 80% Power to Active Magnetic Deflectors & Regolith Bunkers",
+          "preview": "Safe Crew Dose (+3 mSv) | Life Support drops to Emergency Power | Science paused",
+          "impacts": {
+            "power_draw_kw": 28.0,
+            "crew_radiation_msv": 3.0,
+            "science_points": 0,
+            "battery_percent_change": -18,
+            "oxygen_percent_change": -4,
+            "shield_integrity_change": -5,
+            "crew_health_change": 0
+          },
+          "feedback": "Engineering Report: The active magnetic coil deflected 92% of energetic protons into space. The crew remained safe inside the regolith vault. ECLSS was strained on backup battery, but no permanent injury occurred."
+        },
+        {
+          "id": "harvest_cme_science",
+          "label": "Option B: Power Science Scanners to Harvest Rare Coronal Data",
+          "preview": "Massive Science Yield (+140 Pts) | Heavy Radiation Dose (+38 mSv) | Medical Alert",
+          "impacts": {
+            "power_draw_kw": 18.0,
+            "crew_radiation_msv": 38.0,
+            "science_points": 140,
+            "battery_percent_change": -5,
+            "oxygen_percent_change": 0,
+            "shield_integrity_change": -15,
+            "crew_health_change": -22
+          },
+          "feedback": "Science Report: Unprecedented solar particle observations captured! But crew radiation monitors flashed amber-red (OSDR threshold alert). Crew shows early signs of radiation fatigue and requires medical downtime."
+        }
+      ]
+    },
+    {
+      "id": "event_dust_or_nightfall",
+      "trigger_day": 7,
+      "title": "ENVIRONMENTAL HAZARD: Solar Blackout Approaching!",
+      "category": "Planetary Environment (PDS)",
+      "badge": "POWER DEFICIT",
+      "donki_ref": "NASA-PDS-M2020-MEDA",
+      "science_note": "Martian dust storms (or the 14-day Lunar polar night) can drop sunlight by over 75%, plunging temperatures to -120°C and starving solar arrays of power.",
+      "dialogue": "Base Engineer: 'Commander, dust optical depth is climbing to tau 3.8 (or lunar shadow is advancing). Our solar panels will drop from 30 kW down to 4 kW! What is our energy doctrine?'",
+      "choices": [
+        {
+          "id": "conserve_power_moxie_off",
+          "label": "Option 1: Shut Down MOXIE / Scrubbers & Switch to Pressurized Tanks",
+          "preview": "Conserves 14 kW Power | Burns 120 L Water/O2 Reserves | Science slows",
+          "impacts": {
+            "power_draw_kw": 10.0,
+            "crew_radiation_msv": 1.5,
+            "science_points": 25,
+            "battery_percent_change": 5,
+            "oxygen_percent_change": -12,
+            "water_liters_change": -75,
+            "shield_integrity_change": 0,
+            "crew_health_change": -5
+          },
+          "feedback": "Resource Log: By throttling power-hungry air scrubbers and thermal pumps, our Kilopower generator carried the habitat through the storm without draining the battery bank. We dipped into stored reserves as planned."
+        },
+        {
+          "id": "burn_fuel_cells",
+          "label": "Option 2: Fire Auxiliary Fuel Cells to Maintain Full Habitat Power",
+          "preview": "Full Science & Life Support maintained | Consumes 220 L Stored Reserves & Battery Wear",
+          "impacts": {
+            "power_draw_kw": 25.0,
+            "crew_radiation_msv": 1.0,
+            "science_points": 90,
+            "battery_percent_change": -30,
+            "oxygen_percent_change": 0,
+            "water_liters_change": -180,
+            "shield_integrity_change": -8,
+            "crew_health_change": 2
+          },
+          "feedback": "Engineering Log: The base ran at 100% capacity and science continued uninterrupted! However, our backup fuel cells burned through 180 liters of precious reserves. One more storm like this will leave us bone dry."
+        }
+      ]
+    },
+    {
+      "id": "event_cryo_ice_deposit",
+      "trigger_day": 11,
+      "title": "EXPLORATION TARGET: Subsurface Water Ice Anomaly Discovered!",
+      "category": "ISRU & Resource Scouting",
+      "badge": "RESOURCE OPPORTUNITY",
+      "donki_ref": "NASA-PDS-LRO-DIVINER-GDR",
+      "science_note": "Orbital radar detected a rich pocket of pure water ice 1.5 meters under the regolith. Ice can be melted for drinking, split into breathing oxygen, or converted into rocket propellant!",
+      "dialogue": "Astrobiologist: 'We located a rich cryo-ice deposit 2 kilometers outside the perimeter. How should we extract the core samples?'",
+      "choices": [
+        {
+          "id": "astronaut_eva",
+          "label": "Option A: 2-Person Spacewalk (EVA) with Thermal Core Drill",
+          "preview": "Yields +350 L Water Ice & High Quality Science (+110 Pts) | Crew Fatigue & Suit O2 Consumed",
+          "impacts": {
+            "power_draw_kw": 16.0,
+            "crew_radiation_msv": 4.5,
+            "science_points": 110,
+            "battery_percent_change": -8,
+            "oxygen_percent_change": -8,
+            "water_liters_change": 350,
+            "shield_integrity_change": 0,
+            "crew_health_change": -10
+          },
+          "feedback": "Mission Log: Astronauts completed a flawless 6-hour EVA! They harvested 350 liters of pristine water ice and gathered pristine core stratigraphy. The crew is tired and slightly radiated, but our water reserves are replenished!"
+        },
+        {
+          "id": "autonomous_rover",
+          "label": "Option B: Deploy Autonomous Rover Drill",
+          "preview": "Zero Crew Risk (0 mSv) | High Power Draw (-22% Battery) | Slower Extraction (+120 L Water)",
+          "impacts": {
+            "power_draw_kw": 26.0,
+            "crew_radiation_msv": 0.5,
+            "science_points": 50,
+            "battery_percent_change": -22,
+            "oxygen_percent_change": 0,
+            "water_liters_change": 120,
+            "shield_integrity_change": 0,
+            "crew_health_change": 4
+          },
+          "feedback": "Robotics Log: Rover drill navigated automatically through the boulders and drilled 3 test cores. Extraction was slow and battery-intensive, but the crew rested comfortably inside the habitat with zero radiation exposure."
+        }
+      ]
+    },
+    {
+      "id": "event_eclss_micro_leak",
+      "trigger_day": 15,
+      "title": "SYSTEM FAILURE: Sabatier Water Condenser Seal Ruptured!",
+      "category": "ECLSS Life Support Maintenance",
+      "badge": "MAINTENANCE CRISIS",
+      "donki_ref": "NASA-OSDR-ECLSS-TR-2023",
+      "science_note": "Life support water recovery loops operate under high pressure and temperature. On the ISS, urine and humidity recyclers require constant preventative upkeep to maintain a 98% water recovery rate.",
+      "dialogue": "Systems Engineer: 'Pressure sensors in the ECLSS Sabatier loop are sounding! We are venting 15 liters of recycled water per hour into the exhaust separator.'",
+      "choices": [
+        {
+          "id": "emergency_overhaul",
+          "label": "Option 1: Emergency Manual Overhaul (Divert Base Power to Diagnostics)",
+          "preview": "Permanent Fix (+15% ECLSS Reliability) | Base Enters Low-Power Standby | Wear on Tools",
+          "impacts": {
+            "power_draw_kw": 22.0,
+            "crew_radiation_msv": 0.8,
+            "science_points": 30,
+            "battery_percent_change": -14,
+            "oxygen_percent_change": -3,
+            "water_liters_change": -20,
+            "shield_integrity_change": 0,
+            "crew_health_change": -6
+          },
+          "feedback": "Engineering Log: The crew disassembled the condenser and replaced the Teflon gasket using 3D-printed spare seals. The leak is 100% sealed, restoring full recycling efficiency!"
+        },
+        {
+          "id": "ration_and_patch",
+          "label": "Option 2: Apply Quick Polymer Patch & Implement Strict Water Rationing",
+          "preview": "Conserves Power (+10% Battery) | Crew Water Rationing (-12% Health) | Risk of Re-leak",
+          "impacts": {
+            "power_draw_kw": 12.0,
+            "crew_radiation_msv": 0.5,
+            "science_points": 15,
+            "battery_percent_change": 6,
+            "oxygen_percent_change": 0,
+            "water_liters_change": -90,
+            "shield_integrity_change": 0,
+            "crew_health_change": -16
+          },
+          "feedback": "Medical Report: Quick sealant slowed the leak, but strict 1.5L/day water rationing has caused mild crew dehydration and headache fatigue (OSDR health impact). Water is leaking at a slow trickle."
+        }
+      ]
+    },
+    {
+      "id": "event_dsn_deep_space_window",
+      "trigger_day": 18,
+      "title": "OPPORTUNITY: Deep Space Network High-Bandwidth Alignment!",
+      "category": "NASA DSN Telecommunications",
+      "badge": "SCIENCE MULTIPLIER",
+      "donki_ref": "NASA-NTRS-20210018593",
+      "science_note": "NASA's Deep Space Network dishes in Goldstone, Madrid, and Canberra provide high-bandwidth Ka-band optical communication links back to Earth Mission Control.",
+      "dialogue": "Flight Director: 'Commander, Earth alignment gives us a 4-hour ultra-high bandwidth link. We can upload our high-resolution scientific survey data or calibrate planetary navigation.'",
+      "choices": [
+        {
+          "id": "beam_science_data",
+          "label": "Option A: Crank Ka-Band Transmitters to Stream Terabytes of Raw Science",
+          "preview": "Massive Science Score (+160 Pts) | High Transmitter Power Draw (-16% Battery)",
+          "impacts": {
+            "power_draw_kw": 24.0,
+            "crew_radiation_msv": 0.3,
+            "science_points": 160,
+            "battery_percent_change": -16,
+            "oxygen_percent_change": 0,
+            "water_liters_change": 0,
+            "shield_integrity_change": 0,
+            "crew_health_change": 5
+          },
+          "feedback": "Mission Control: 'Earth scientists have received the complete spectroscopy dataset! Congratulations Commander, this is Nobel-worthy planetary research!'"
+        },
+        {
+          "id": "conserve_telemetry",
+          "label": "Option B: Send Compressed Summary Only & Keep Batteries Fully Charged",
+          "preview": "Moderate Science (+40 Pts) | 100% Battery Reserves Maintained for Safety",
+          "impacts": {
+            "power_draw_kw": 14.0,
+            "crew_radiation_msv": 0.2,
+            "science_points": 40,
+            "battery_percent_change": 8,
+            "oxygen_percent_change": 0,
+            "water_liters_change": 0,
+            "shield_integrity_change": 0,
+            "crew_health_change": 0
+          },
+          "feedback": "Operations Log: Standard telemetry packet verified by Madrid ground station. High battery reserve preserved for unknown environmental anomalies ahead."
+        }
+      ]
+    }
+  ],
+  "sound_cues": {
+    "click": { "freq": 650, "type": "sine", "duration": 0.05 },
+    "alert": { "freq": 440, "sweep": 880, "type": "sawtooth", "duration": 0.4 },
+    "tick": { "freq": 1200, "type": "triangle", "duration": 0.02 },
+    "success": { "chords": [440, 554, 659, 880], "duration": 0.6 },
+    "emergency": { "freq": 320, "sweep": 180, "type": "sawtooth", "duration": 0.5 },
+    "power_divert": { "freq": 220, "sweep": 440, "type": "sine", "duration": 0.2 }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "_fixture_note": "NASA Reference Fixture for OFFLINE=1 Instant Execution",
+  "offline": true,
+  "verified_at": "2026-11-11T00:00:00Z",
+  "cached_records": 5,
+  "data_ref": "../data/nasa_reference.json"
+}
+

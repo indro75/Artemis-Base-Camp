@@ -1,13 +1,612 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#070b16">
+  <title>Artemis Base Camp: Junior Outpost Commander | NASA Mission Trainer</title>
+  <meta name="description" content="An interactive, visual space outpost survival and engineering simulator for junior astronauts (ages 7-12), grounded in real NASA open datasets.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-space">
+  
+  <!-- ============================================================ -->
+  <!-- TOP HEADER / MISSION BAR -->
+  <!-- ============================================================ -->
+  <header class="game-header" role="banner">
+    <div class="header-left">
+      <div class="nasa-insignia" aria-label="NASA Logo">
+        <svg viewBox="0 0 100 100" class="nasa-svg" role="img" aria-label="NASA Meatball">
+          <circle cx="50" cy="50" r="46" fill="#0b3d91" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M12 50 C28 20, 72 20, 88 50 C72 80, 28 80, 12 50 Z" fill="none" stroke="#fc3d21" stroke-width="4" stroke-dasharray="4 2"/>
+          <circle cx="28" cy="35" r="3.5" fill="#ffffff"/>
+          <circle cx="70" cy="30" r="2.5" fill="#ffffff"/>
+          <circle cx="76" cy="62" r="3" fill="#ffffff"/>
+          <circle cx="34" cy="68" r="2" fill="#ffffff"/>
+          <circle cx="50" cy="50" r="5" fill="#ffffff"/>
+          <text x="50" y="55" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle" letter-spacing="2">NASA</text>
+        </svg>
+      </div>
+
+      <div class="title-group">
+        <h1 class="game-title">ARTEMIS BASE CAMP <span class="title-badge">JUNIOR COMMANDER</span></h1>
+        <span class="game-sub">Space Apps 2026 &bull; Deep Space Survival Simulator (Ages 7–12)</span>
+      </div>
+    </div>
+
+    <!-- Center: Moon / Mars World Switcher -->
+    <div class="world-selector-pill" role="group" aria-label="Target Outpost World">
+      <button id="btn-loc-moon" class="world-btn active" data-loc="moon" title="Lunar South Pole - Shackleton Crater">
+        <span class="world-emoji">🌕</span> <span class="world-text">Moon Base</span>
+      </button>
+      <button id="btn-loc-mars" class="world-btn" data-loc="mars" title="Mars - Jezero Crater Paleolake">
+        <span class="world-emoji">🪐</span> <span class="world-text">Mars Outpost</span>
+      </button>
+    </div>
+
+    <!-- Right Header Actions -->
+    <div class="header-right">
+      <button id="btn-start-mission-header" class="btn-arcade btn-green" title="Start a New Expedition">
+        <span>🚀</span> <span class="btn-text-full">START MISSION</span><span class="btn-text-compact">START</span>
+      </button>
+      <button id="btn-tutorial-open" class="btn-arcade btn-purple desktop-nav-btn" title="How to Play Guide">
+        <span>🎮</span> HOW TO PLAY
+      </button>
+      <button id="btn-audio-toggle" class="btn-arcade btn-icon" title="Toggle Sound" aria-label="Toggle Sound">
+        <span id="audio-icon">🔊</span>
+      </button>
+      <button id="btn-glossary-open" class="btn-arcade btn-blue desktop-nav-btn" title="Space Words Glossary">
+        <span>📖</span> GLOSSARY
+      </button>
+      <button id="btn-provenance-open" class="btn-arcade btn-cyan desktop-nav-btn" title="NASA Open Datasets">
+        <span>🔬</span> NASA DATA
+      </button>
+      <button id="btn-debrief-view" class="btn-arcade btn-gold desktop-nav-btn" title="View Certification Badge">
+        <span>🏅</span> CERTIFICATE
+      </button>
+      <!-- Mobile Menu Hamburger Button -->
+      <button id="btn-mobile-menu" class="btn-arcade btn-icon mobile-only-btn" title="Open Navigation Menu" aria-label="Toggle Mobile Navigation Menu" aria-expanded="false">
+        <span id="mobile-menu-icon">☰</span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer hidden" id="mobile-nav-drawer" role="navigation" aria-label="Mobile Navigation">
+      <div class="mobile-nav-links">
+        <button id="btn-mobile-tutorial" class="mobile-drawer-btn" title="How to Play Guide">
+          <span class="drawer-icon">🎮</span>
+          <span class="drawer-label">How to Play Guide</span>
+        </button>
+        <button id="btn-mobile-glossary" class="mobile-drawer-btn" title="Space Words Glossary">
+          <span class="drawer-icon">📖</span>
+          <span class="drawer-label">Space Glossary (Kids)</span>
+        </button>
+        <button id="btn-mobile-provenance" class="mobile-drawer-btn" title="NASA Open Datasets">
+          <span class="drawer-icon">🔬</span>
+          <span class="drawer-label">NASA Science Data</span>
+        </button>
+        <button id="btn-mobile-debrief" class="mobile-drawer-btn" title="View Certification Badge">
+          <span class="drawer-icon">🏅</span>
+          <span class="drawer-label">Flight Director Badge</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- TOP ARCADE STATUS BAR: 4 BIG METERS + CREW -->
+  <!-- ============================================================ -->
+  <section class="arcade-hud-bar" aria-label="Base Resource Health Bars">
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>outpost</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+    <!-- Time & Weather Badge -->
+    <div class="hud-stat-chip time-chip">
+      <div class="chip-icon">⏱️</div>
+      <div class="chip-info">
+        <span class="chip-label" id="disp-mission-clock">SOL 01 &bull; 00:00</span>
+        <span class="chip-detail" id="disp-sunlight-status">☀️ Sunlight: 100% (+120°C)</span>
+      </div>
+    </div>
+
+    <!-- Resource 1: Power Battery -->
+    <div class="hud-stat-chip resource-chip power-chip" id="card-power">
+      <div class="chip-icon">⚡</div>
+      <div class="chip-info">
+        <div class="chip-header">
+          <span class="chip-title">POWER GRID</span>
+          <span class="chip-net" id="disp-power-flow">+10.5 kW</span>
+        </div>
+        <div class="arcade-meter-track">
+          <div class="arcade-meter-fill fill-power" id="bar-battery" style="width: 100%;"></div>
+        </div>
+        <div class="chip-footer">
+          <span id="disp-battery-pct">100% Battery</span>
+          <span class="status-pill status-nominal" id="badge-power-status">FULL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource 2: Oxygen & Life Support -->
+    <div class="hud-stat-chip resource-chip o2-chip" id="card-lifesupport">
+      <div class="chip-icon">🫧</div>
+      <div class="chip-info">
+        <div class="chip-header">
+          <span class="chip-title">OXYGEN AIR</span>
+          <span class="chip-net" id="disp-oxygen-pct">100% O2</span>
+        </div>
+        <div class="arcade-meter-track">
+          <div class="arcade-meter-fill fill-oxygen" id="bar-oxygen" style="width: 100%;"></div>
+        </div>
+        <div class="chip-footer">
+          <span id="disp-scrubber-status">Scrubbers Active</span>
+          <span class="status-pill status-nominal" id="badge-ls-status">FRESH</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource 3: Water Reservoir -->
+    <div class="hud-stat-chip resource-chip water-chip">
+      <div class="chip-icon">💧</div>
+      <div class="chip-info">
+        <div class="chip-header">
+          <span class="chip-title">WATER SUPPLY</span>
+          <span class="chip-net" id="disp-water-liters">850 Liters</span>
+        </div>
+        <div class="arcade-meter-track">
+          <div class="arcade-meter-fill fill-water" id="bar-water" style="width: 90%;"></div>
+        </div>
+        <div class="chip-footer">
+          <span id="disp-water-recycling">96% Loop Recycled</span>
+          <span class="status-pill status-nominal">SAFE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource 4: Radiation Shields -->
+    <div class="hud-stat-chip resource-chip shield-chip" id="card-radiation">
+      <div class="chip-icon">🛡️</div>
+      <div class="chip-info">
+        <div class="chip-header">
+          <span class="chip-title">FORCE SHIELDS</span>
+          <span class="chip-net" id="disp-deflection-pct">75% Block</span>
+        </div>
+        <div class="arcade-meter-track">
+          <div class="arcade-meter-fill fill-shield" id="bar-shield-meter" style="width: 75%;"></div>
+        </div>
+        <div class="chip-footer">
+          <span id="disp-crew-dose">1.2 mSv Dose</span>
+          <span class="status-pill status-nominal" id="badge-rad-status">OSDR SAFE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource 5: Science Points -->
+    <div class="hud-stat-chip science-chip" id="card-science">
+      <div class="chip-icon">🔬</div>
+      <div class="chip-info">
+        <span class="chip-label">SCIENCE YIELD</span>
+        <span class="science-big-counter" id="disp-science-total">0 PTS</span>
+        <span class="chip-detail" id="disp-discoveries-count">0 / 4 Discoveries</span>
+      </div>
+    </div>
+
+    <!-- Crew Health Avatars -->
+    <div class="hud-stat-chip crew-chip">
+      <div class="chip-icon">🧑‍🚀</div>
+      <div class="chip-info">
+        <span class="chip-label">CREW STATUS (100%)</span>
+        <div class="crew-avatars-row">
+          <span class="crew-avatar" title="Commander Maya - Nominal" id="crew-avatar-0">👩‍🚀</span>
+          <span class="crew-avatar" title="Engineer Tariq - Nominal" id="crew-avatar-1">👨‍🚀</span>
+          <span class="crew-avatar" title="Astrobiologist Elena - Nominal" id="crew-avatar-2">👩‍🚀</span>
+          <span class="crew-avatar" title="Pilot Leo - Nominal" id="crew-avatar-3">👨‍🚀</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- MAIN GAMEPLAY ARENA: GIANT INTERACTIVE CANVAS STAGE -->
+  <!-- ============================================================ -->
+  <main class="game-stage-container">
+    
+    <div class="canvas-viewport" id="canvas-wrapper">
+      <canvas id="outpost-canvas" width="960" height="520" aria-label="Interactive Space Outpost Simulation Stage"></canvas>
+
+      <!-- Floating Canvas Overlay Badges -->
+      <div class="canvas-floating-top-left">
+        <div class="donki-weather-indicator" id="disp-weather-status">
+          <span class="radar-ping"></span> 🟢 DONKI SPACE WEATHER: NOMINAL
+        </div>
+      </div>
+
+      <!-- Quick Canvas Click Hints for Kids -->
+      <div class="canvas-hint-banner" id="canvas-hint">
+        <span>💡 TIP: Click buildings, rover, or astronauts on the surface to inspect and repair!</span>
+      </div>
+
+      <!-- Simulation Playback Controls Overlay -->
+      <div class="canvas-floating-controls" role="group" aria-label="Time Controls">
+        <button id="btn-sim-pause" class="sim-pill-btn" title="Pause Game">⏸ Pause</button>
+        <button id="btn-sim-play" class="sim-pill-btn active" title="Normal Play Speed">▶ Play (1x)</button>
+        <button id="btn-sim-fast" class="sim-pill-btn" title="Fast Forward Speed">⏩ Fast (2x)</button>
+        <button id="btn-sim-step" class="sim-pill-btn" title="Advance by 4 Hours">⏭ +4h Tick</button>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- COMMANDER'S TACTILE CONTROL DECK (BOTTOM) -->
+    <!-- ============================================================ -->
+    <section class="control-deck-row">
+      
+      <!-- Capcom Robot Assistant Box -->
+      <div class="capcom-box">
+        <div class="capcom-avatar-wrapper">
+          <span class="capcom-avatar">🤖</span>
+          <span class="capcom-badge">CAPCOM BOT</span>
+        </div>
+        <div class="capcom-bubble">
+          <p id="capcom-message">
+            "Welcome to Artemis Base Camp, Commander! Our solar panels are turning sunlight into electricity. Click the Rover to scout the crater for ice!"
+          </p>
+        </div>
+      </div>
+
+      <!-- Tactile Action Buttons for Kids -->
+      <div class="action-buttons-grid">
+        
+        <!-- Action 1: Shield Power Toggle -->
+        <button class="action-card-btn" id="btn-action-shield" title="Toggle Protective Magnetic Forcefield">
+          <div class="action-icon">🛡️</div>
+          <div class="action-text">
+            <strong>FORCE SHIELDS</strong>
+            <span class="action-state" id="disp-action-shield-state">HIGH (70%)</span>
+          </div>
+        </button>
+
+        <!-- Action 2: Life Support Mode -->
+        <button class="action-card-btn" id="btn-action-eclss" title="Toggle ECLSS Oxygen & Water Scrubbers">
+          <div class="action-icon">🫧</div>
+          <div class="action-text">
+            <strong>LIFE SUPPORT</strong>
+            <span class="action-state" id="disp-action-eclss-state">NOMINAL (80%)</span>
+          </div>
+        </button>
+
+        <!-- Action 3: Launch Rover Science Expedition -->
+        <button class="action-card-btn action-highlight" id="btn-action-rover" title="Deploy Rover to gather Ice & Minerals">
+          <div class="action-icon">🚜</div>
+          <div class="action-text">
+            <strong>DEPLOY ROVER</strong>
+            <span class="action-state">+30 Science Yield</span>
+          </div>
+        </button>
+
+        <!-- Action 4: Auto-Repair Drone -->
+        <button class="action-card-btn" id="btn-action-repair" title="Deploy Maintenance Drone to clean panels & fix wear">
+          <div class="action-icon">🔧</div>
+          <div class="action-text">
+            <strong>REPAIR DRONE</strong>
+            <span class="action-state">Clean Base (-12% Bat)</span>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- Quick Mission Doctrine Buttons -->
+      <div class="doctrines-quick-bar">
+        <span class="doctrine-label">STRATEGY:</span>
+        <button class="doctrine-pill active" id="preset-balanced" title="Balanced operations for normal sols">
+          ⚖️ Cruise Mode
+        </button>
+        <button class="doctrine-pill pill-storm" id="preset-storm" title="Max shields, storm shelter active!">
+          🚨 Storm Shelter!
+        </button>
+        <button class="doctrine-pill pill-science" id="preset-science" title="Max drills, rover scouting, double science!">
+          🔭 Science Frenzy!
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Mini Telemetry Strip / Activity Log -->
+    <div class="activity-ticker">
+      <span class="ticker-prefix">RADIO TELEMETRY:</span>
+      <span class="ticker-live-text" id="live-radio-chatter">Commander initialized outpost. All systems nominal.</span>
+    </div>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: START MISSION / LAUNCHPAD BRIEFING -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay" id="modal-start-mission" role="dialog" aria-modal="true" aria-labelledby="launchpad-title">
+    <div class="modal-box large-modal-card launchpad-card">
+      <div class="launchpad-header">
+        <div class="launchpad-title-group">
+          <span class="launchpad-pretitle">NASA ARTEMIS BASE CAMP &bull; MISSION CONTROL</span>
+          <h2 id="launchpad-title">🚀 EXPEDITION FLIGHT DEPLOYMENT</h2>
+        </div>
+        <button class="modal-close-btn" id="btn-close-start-mission" aria-label="Close Launchpad">&times;</button>
+      </div>
+
+      <div class="launchpad-body">
+        
+        <!-- Callsign Input Row -->
+        <div class="commander-input-row">
+          <label for="input-launch-callsign" class="commander-label">🧑‍🚀 COMMANDER CALLSIGN / NAME:</label>
+          <input type="text" id="input-launch-callsign" value="Cadet Explorer" maxlength="28" class="launch-input" placeholder="Enter your astronaut name...">
+        </div>
+
+        <!-- Destination Selector Cards -->
+        <div class="launch-destination-section">
+          <span class="section-label">CHOOSE TARGET OUTPOST:</span>
+          <div class="launch-dest-cards">
+            
+            <div class="dest-card active" id="dest-card-moon" data-dest="moon">
+              <div class="dest-card-header">
+                <span class="dest-icon">🌕</span>
+                <div>
+                  <h3 class="dest-title">Moon: Shackleton Crater</h3>
+                  <span class="dest-body-tag">Lunar South Pole &bull; 0.166g Gravity</span>
+                </div>
+              </div>
+              <p class="dest-description">
+                Peak of Eternal Light with 86% annual solar access. Ancient water ice traps hidden in permanent crater shadows (-246°C). High galactic cosmic ray exposure.
+              </p>
+              <div class="dest-stats-badges">
+                <span>🌡️ -130°C to +120°C</span>
+                <span>☀️ 28 Earth Days / Cycle</span>
+                <span>🧊 Subsurface Ice</span>
+              </div>
+            </div>
+
+            <div class="dest-card" id="dest-card-mars" data-dest="mars">
+              <div class="dest-card-header">
+                <span class="dest-icon">🪐</span>
+                <div>
+                  <h3 class="dest-title">Mars: Jezero Crater</h3>
+                  <span class="dest-body-tag">Perseverance Delta &bull; 0.38g Gravity</span>
+                </div>
+              </div>
+              <p class="dest-description">
+                Ancient river delta rich in clays and carbonates. Thin 610 Pa carbon dioxide atmosphere ready for MOXIE oxygen cracking. Frequent dust storms reduce solar flux.
+              </p>
+              <div class="dest-stats-badges">
+                <span>🌡️ -10°C to -95°C</span>
+                <span>☀️ 24h 39m Sol</span>
+                <span>💨 Seasonal Dust Storms</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3 Primary Directives -->
+        <div class="launch-directives-card">
+          <h4>📋 PRIMARY EXPEDITION DIRECTIVES (20 SOLS):</h4>
+          <ol class="directives-list">
+            <li><strong>Balance the Power Grid:</strong> Solar generation drops to zero in night and storms. Keep the Kilopower reactor tuned and protect battery storage!</li>
+            <li><strong>Protect Life Support &amp; Shields:</strong> Scrubbers recycle 96% of water and oxygen. Active magnetic shields must be powered during DONKI solar storms!</li>
+            <li><strong>Conduct Deep Science:</strong> Drill ice cores and transmit research to earn points and claim your <strong>Junior Flight Director Certification</strong>!</li>
+          </ol>
+        </div>
+
+        <!-- Start Mission Giant Action Button -->
+        <div class="launch-action-container">
+          <button id="btn-launch-countdown" class="hud-btn-launch-giant">
+            <span class="launch-rocket-icon">🚀</span>
+            <span class="launch-btn-text">
+              <strong>START MISSION NOW</strong>
+              <small>Initiate Outpost Systems &amp; Clock</small>
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: TACTICAL DECISION & TRADE-OFF POP-UP -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay hidden" id="modal-tactical" role="dialog" aria-modal="true" aria-labelledby="tactical-modal-title">
+    <div class="modal-box tactical-modal-card">
+      <div class="modal-header-banner">
+        <span class="alert-icon-large">⚠️</span>
+        <div>
+          <span class="modal-category" id="tactical-modal-category">SPACE WEATHER ALERT (DONKI)</span>
+          <h2 id="tactical-modal-title" class="tactical-headline">X-Class Solar Particle Storm Inbound!</h2>
+        </div>
+      </div>
+
+      <div class="modal-body-content">
+        <!-- Dialogue Box -->
+        <div class="dialogue-box">
+          <span class="speaker-tag" id="tactical-speaker">Flight Director:</span>
+          <p id="tactical-dialogue-text">"Commander, satellite sensors detect an X4.5 coronal mass ejection heading toward our crater! We have 45 minutes to reconfigure outpost power. What is your order?"</p>
+        </div>
+
+        <!-- Science grounding box -->
+        <div class="science-grounding-box">
+          <span class="science-badge">🔬 NASA SCIENTIFIC EVIDENCE:</span>
+          <p id="tactical-science-note">Based on NASA DONKI Space Weather records: solar particle events cause sudden proton flux spikes. Without active deflection, astronauts receive dangerous radiation doses.</p>
+        </div>
+
+        <!-- Side-by-Side Trade-off Choices -->
+        <div class="choices-container" id="tactical-choices-container">
+          <!-- Dynamically generated choice cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: POST-MISSION DEBRIEF & FLIGHT DIRECTOR CERTIFICATE -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay hidden" id="modal-debrief" role="dialog" aria-modal="true" aria-labelledby="debrief-modal-title">
+    <div class="modal-box debrief-modal-card">
+      <div class="modal-header">
+        <h2 id="debrief-modal-title">OFFICIAL NASA FLIGHT DIRECTOR DEBRIEF</h2>
+        <button class="modal-close-btn" id="btn-close-debrief" aria-label="Close Debrief">&times;</button>
+      </div>
+
+      <div class="debrief-content-layout">
+        <!-- Certificate Canvas Preview -->
+        <div class="certificate-container">
+          <canvas id="cert-canvas" width="560" height="380" aria-label="Flight Director Official Badge Certificate"></canvas>
+          <div class="cert-controls">
+            <label for="input-cadet-name" class="cert-name-label">Commander Name:</label>
+            <input type="text" id="input-cadet-name" value="Cadet Explorer" maxlength="28" class="cert-name-input">
+            <button id="btn-download-cert" class="btn-arcade btn-gold" style="width: 100%; margin-top: 6px;">📥 Download Badge (PNG)</button>
+          </div>
+        </div>
+
+        <!-- Debrief Stats & Engineering Insights -->
+        <div class="debrief-evaluation-column">
+          <div class="score-summary-card">
+            <span class="score-label">FINAL MISSION SCORE</span>
+            <span class="score-big" id="disp-debrief-score">2,850 PTS</span>
+            <span class="rank-title" id="disp-debrief-rank">Senior Outpost Commander</span>
+          </div>
+
+          <div class="debrief-breakdown-table">
+            <div class="table-row"><span>Sols Survived:</span><strong id="debrief-sols">20 / 20 Sols</strong></div>
+            <div class="table-row"><span>Total Science Points:</span><strong id="debrief-science">340 Pts</strong></div>
+            <div class="table-row"><span>Crew Final Health:</span><strong id="debrief-health">94% Nominal</strong></div>
+            <div class="table-row"><span>Cumulative Radiation:</span><strong id="debrief-dose">14.2 mSv (OSDR Safe)</strong></div>
+            <div class="table-row"><span>Water Remaining:</span><strong id="debrief-water">580 Liters</strong></div>
+          </div>
+
+          <div class="debrief-lessons-card">
+            <h3>WHAT YOUR DECISIONS TAUGHT YOU ABOUT NASA MISSION ENGINEERING:</h3>
+            <ul id="debrief-lessons-list">
+              <li><strong>No choice is free:</strong> Diverting power to active EM shields saved the crew from deadly Coronal Mass Ejections (CMEs) at the expense of life support battery reserves.</li>
+              <li><strong>In-situ resource utilization (ISRU):</strong> Mining subsurface water ice and cracking CO2 with MOXIE is essential because supply drops from Earth take months.</li>
+              <li><strong>Biological limits are uncompromising:</strong> Radiation from solar energetic particles accumulates permanently in the human body, proving why thick regolith vaults are non-negotiable.</li>
+            </ul>
+          </div>
+
+          <button id="btn-restart-mission" class="btn-arcade btn-cyan" style="width: 100%; margin-top: 14px;">🚀 Start New Outpost Mission</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: HOW TO PLAY / COMMANDER TRAINING GUIDE -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay hidden" id="modal-tutorial" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+    <div class="modal-box large-modal-card tutorial-modal-card">
+      <div class="modal-header tutorial-banner">
+        <div class="tutorial-header-content">
+          <span class="tutorial-badge">FLIGHT DIRECTORS MANUAL &bull; AGES 7-12</span>
+          <h2 id="tutorial-title">🚀 HOW TO PLAY: COMMANDER TRAINING</h2>
+        </div>
+        <button class="modal-close-btn" id="btn-close-tutorial" aria-label="Close Tutorial">&times;</button>
+      </div>
+
+      <div class="tutorial-body">
+        
+        <div class="tutorial-step-card">
+          <div class="step-badge">GOAL</div>
+          <div class="step-content">
+            <h3>🎯 KEEP 4 ASTRONAUTS ALIVE FOR 20 SOLS!</h3>
+            <p>
+              You're the boss of the outpost! Balance electricity, keep oxygen fresh, keep water flowing, and shield your team from space sunburns.
+            </p>
+          </div>
+        </div>
+
+        <div class="tutorial-step-card">
+          <div class="step-badge">METERS</div>
+          <div class="step-content">
+            <h3>📊 WATCH YOUR 4 VITAL METERS</h3>
+            <ul class="tutorial-bullets">
+              <li><strong>⚡ Power:</strong> Solar panels need sunlight. Nuclear Kilopower gives steady backup. If power goes red, your battery drains!</li>
+              <li><strong>🫧 Oxygen:</strong> Fresh air for breathing. Keep life support powered so scrubbers clean carbon dioxide!</li>
+              <li><strong>💧 Water:</strong> Fresh drinking water. Recyclers turn humidity back into water!</li>
+              <li><strong>🛡️ Force Shields:</strong> Protects astronauts from solar flares! Turn them up during space storms!</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tutorial-step-card">
+          <div class="step-badge">ACTIONS</div>
+          <div class="step-content">
+            <h3>🎮 CLICK BUTTONS ON THE DECK</h3>
+            <div class="tutorial-mini-guide">
+              <div class="mini-box"><strong>🛡️ Force Shields:</strong> Tap to toggle between High, Max, or Off!</div>
+              <div class="mini-box"><strong>🚜 Deploy Rover:</strong> Sends rover to discover science points &amp; water ice!</div>
+              <div class="mini-box"><strong>🔧 Repair Drone:</strong> Cleans space dust from solar panels!</div>
+              <div class="mini-box"><strong>🚨 Storm Shelter:</strong> One-tap emergency mode for solar flares!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tutorial-action-row">
+          <button id="btn-tutorial-start" class="btn-arcade btn-gold tutorial-big-btn">🚀 Let's Play, Commander! Start Mission</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: SCIENCE PROVENANCE / NASA DATA LOG -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay hidden" id="modal-provenance" role="dialog" aria-modal="true" aria-labelledby="provenance-title">
+    <div class="modal-box large-modal-card">
+      <div class="modal-header">
+        <h2 id="provenance-title">🔬 NASA SCIENCE PROVENANCE &amp; OPEN DATASETS</h2>
+        <button class="modal-close-btn" id="btn-close-provenance" aria-label="Close Provenance">&times;</button>
+      </div>
+
+      <div class="provenance-body">
+        <div class="provenance-intro-banner">
+          <p>
+            <strong>Evidence Layer Standard:</strong> Every metric, solar angle, biological dose limit, and space weather event in this simulator is directly grounded in real NASA open datasets. Deterministic code in <code>sim.js</code> runs the science.
+          </p>
+        </div>
+
+        <div class="provenance-dataset-list" id="provenance-cards-list">
+          <!-- Dynamically populated from data/nasa_reference.json -->
+        </div>
+
+        <div class="provenance-footer-note">
+          <span>License: Apache-2.0 &bull; NASA Space Apps Challenge 2026</span>
+          <span class="offline-badge">OFFLINE-FIRST: 100% Mock &amp; Cache Enabled</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: SPACE GLOSSARY FOR KIDS (AGES 7-12) -->
+  <!-- ============================================================ -->
+  <div class="modal-overlay hidden" id="modal-glossary" role="dialog" aria-modal="true" aria-labelledby="glossary-title">
+    <div class="modal-box large-modal-card">
+      <div class="modal-header">
+        <h2 id="glossary-title">📖 JUNIOR ASTRONAUT SPACE GLOSSARY</h2>
+        <button class="modal-close-btn" id="btn-close-glossary" aria-label="Close Glossary">&times;</button>
+      </div>
+
+      <div class="glossary-body">
+        <p class="glossary-intro">
+          Learn real rocket science words used by NASA flight directors and astronauts!
+        </p>
+
+        <div class="glossary-grid" id="glossary-cards-container">
+          <!-- Populated from data/nasa_reference.json -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: sim.js pure engine first, app.js UI controller second -->
+  <script src="sim.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
