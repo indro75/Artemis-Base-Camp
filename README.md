@@ -88,9 +88,13 @@ outpost/
 │   └── test_sim.js                 # 25 automated unit tests for physics & tradeoffs
 ├── docs/
 │   └── AI_USE.md                   # Space Apps AI disclosure documentation
+├── MANUAL.md                       # Complete Flight Director's Gaming Manual (Ages 7-12)
 ├── LICENSE                         # Apache-2.0 Open Source License
 └── README.md                       # Complete mission documentation
 ```
+
+### 📖 Flight Director's Manual
+For a complete step-by-step gameplay walkthrough, telemetry cheat sheet, and pro-tips, see the dedicated **[MANUAL.md](MANUAL.md)**.
 
 ### Instant Play (Zero Build Step & Offline Resilient)
 The entire application runs **offline out of the box** with zero account creation, zero package installation, and zero external build steps:
