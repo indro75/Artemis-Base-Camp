@@ -118,7 +118,7 @@ To verify all physical equations, resource balances, and OSDR health degradation
 node tests/test_sim.js
 ```
 
-All 25 automated unit tests verify:
+All 25 automated unit test verify:
 - Moon and Mars planetary environmental initializations.
 - Day/night diurnal power progression and battery energy balance.
 - ECLSS oxygen decline under power starvation.
